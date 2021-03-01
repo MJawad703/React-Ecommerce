@@ -1,7 +1,6 @@
 import React from 'react';
 import './directory.scss';
 import Menu from '../menu-item/menuItem.component'
-
 class Directory extends React.Component {
     constructor() {
         super();
