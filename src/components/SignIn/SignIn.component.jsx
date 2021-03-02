@@ -1,7 +1,9 @@
+// @ts-nocheck
 import React, { Component } from 'react'
 import FormInput from '../formInput/formInput.component'
 import CustomButton from '../custom-button/custom-button.component'
 import '../SignIn/SignIn.style.scss'
+import { signInWithGoogle } from '../../firebase/firebase.utils'
 
 class SignIn extends Component {
     constructor(props) {
@@ -45,7 +47,13 @@ class SignIn extends Component {
                         label="password"
                         required
                     />
-                    <CustomButton onClick={this.handleSubmit} type="submit">Submit</CustomButton>
+                    <div className="button-container">
+                        <CustomButton type="submit">Submit</CustomButton>
+                        <CustomButton onClick={signInWithGoogle} isGoogle>
+                            {' '}
+                        Sign In with google {' '}
+                        </CustomButton>
+                    </div>
                 </form>
             </div>
         )

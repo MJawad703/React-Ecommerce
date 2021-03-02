@@ -20,5 +20,12 @@
       color: black;
       border: 1px solid black;
     }
+
+    &.google{
+      background-color: #4c8bf5; 
+      color: white;
+      &:hover {
+        background-color: hsl(218, 53%, 43%);
+      }
+    }
   }
-  
