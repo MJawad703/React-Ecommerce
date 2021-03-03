@@ -1,3 +1,4 @@
+// @ts-nocheck
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
@@ -11,6 +12,28 @@ const firebaseConfig = {
     appId: "1:299650502434:web:e958f09ba08c84e0a55f7b",
     measurementId: "G-7LV2359H6S"
 };
+
+export const addUserToDatabase = async (authUser, additionalData) => {
+    if (!authUser) { return }
+    const userRef = firestore.doc(`users/${authUser.uid}`);
+    const snapShot = userRef.get();
+    if (!snapShot.exists) {
+        const { displayName, email } = authUser;
+        const createdAt = new Date();
+        try {
+            await userRef.set({
+                displayName,
+                email,
+                createdAt,
+                ...additionalData
+
+            })
+        } catch (error) {
+            console.log(`this is a error message ${error.message}`)
+        }
+    }
+    return userRef
+}
 
 firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();

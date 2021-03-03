@@ -5,7 +5,7 @@ import Shop from '../src/pages/shop/shop.component.jsx'
 import Header from '../src/components/header/header.component.jsx'
 import SignInSignUp from '../src/pages/SignIn-SignUp/SignIn-SignUp.component.jsx'
 import { Route, Switch } from 'react-router-dom'
-import { auth } from '../src/firebase/firebase.utils'
+import { auth, addUserToDatabase } from '../src/firebase/firebase.utils'
 
 
 
@@ -21,9 +21,23 @@ class App extends React.Component {
   unSubscribeFromAuth = null
 
   componentDidMount() {
-    this.unSubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user })
-      console.log(user)
+    // code to store firebase returned data in our local state
+    this.unSubscribeFromAuth = auth.onAuthStateChanged(async (authUser) => {
+      // this.setState({ currentUser: user })
+      if (authUser) {
+        const userRef = await addUserToDatabase(authUser)
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          }, () => console.log(this.state.currentUser))
+        })
+      } else {
+        this.setState({ currentUser: null })
+      }
+      // console.log(user)
     })
   }
 
