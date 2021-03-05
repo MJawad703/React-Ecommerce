@@ -13,17 +13,14 @@ class App extends React.Component {
   constructor() {
     super()
     this.state = {
-      currentUser: null
+      currentUser: ''
     }
   }
-
-
-  unSubscribeFromAuth = null
+  unSubscribeFromAuth = null;
 
   componentDidMount() {
     // code to store firebase returned data in our local state
-    this.unSubscribeFromAuth = auth.onAuthStateChanged(async (authUser) => {
-      // this.setState({ currentUser: user })
+    this.unSubscribeFromAuth = auth.onAuthStateChanged(async authUser => {
       if (authUser) {
         const userRef = await addUserToDatabase(authUser)
         userRef.onSnapshot(snapShot => {
@@ -32,15 +29,14 @@ class App extends React.Component {
               id: snapShot.id,
               ...snapShot.data()
             }
-          }, () => console.log(this.state.currentUser))
+          })
         })
       } else {
         this.setState({ currentUser: null })
+        console.log(this.state.currentUser)
       }
-      // console.log(user)
     })
   }
-
   componentWillUnmount() {
     this.unSubscribeFromAuth()
   }

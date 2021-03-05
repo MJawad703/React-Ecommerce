@@ -14,11 +14,11 @@ const firebaseConfig = {
 };
 
 export const addUserToDatabase = async (authUser, additionalData) => {
-    if (!authUser) { return }
+    if (!authUser)  return
     const userRef = firestore.doc(`users/${authUser.uid}`);
-    const snapShot = userRef.get();
-    if (!snapShot.exists) {
-        const { displayName, email } = authUser;
+    const userData = await userRef.get();
+    if ( !userData.exists) {
+        const { displayName , email } = authUser;
         const createdAt = new Date();
         try {
             await userRef.set({
@@ -26,16 +26,19 @@ export const addUserToDatabase = async (authUser, additionalData) => {
                 email,
                 createdAt,
                 ...additionalData
-
             })
-        } catch (error) {
-            console.log(`this is a error message ${error.message}`)
+        }
+        catch(error) {
+            console.log(`${error}`)
         }
     }
     return userRef
 }
 
-firebase.initializeApp(firebaseConfig);
+if(!firebase.apps.length){
+    firebase.initializeApp(firebaseConfig);
+}
+
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
